@@ -2,8 +2,8 @@
 
 DROPOUT_RATIO = -1
 
-mean_pix_norm = [123.675, 116.28, 103.53]
-std_pix_norm = [58.395, 57.12, 57.375]
+mean_pix_norm = [123.675, 116.28, 103.53, 0.0]
+std_pix_norm = [58.395, 57.12, 57.375, 1.0]
 bgr_to_rgb = False
 
 # mean_pix_norm = [123.675, 116.28, 103.53, 0.0]  # @DEBUG
@@ -12,13 +12,7 @@ bgr_to_rgb = False
 
 norm_cfg = dict(type="SyncBN", requires_grad=True)
 data_preprocessor = dict(
-    type="SegDataPreProcessor",
-    mean=mean_pix_norm,
-    std=std_pix_norm,
-    bgr_to_rgb=bgr_to_rgb,
-    pad_val=0,
-    seg_pad_val=255,
-    size_divisor=32
+    type="SegDataPreProcessor", mean=mean_pix_norm, std=std_pix_norm, bgr_to_rgb=bgr_to_rgb, pad_val=0, seg_pad_val=255, size_divisor=32
 )  # @CUSTUMED
 model = dict(
     type="CascadeEncoderDecoder",
@@ -27,8 +21,8 @@ model = dict(
     pretrained="open-mmlab://msra/hrnetv2_w18",
     backbone=dict(
         type="HRNet",
-        in_channels=3,
-        # in_channels=4,  # @DEBUG
+        # in_channels=3,
+        in_channels=4,
         norm_cfg=norm_cfg,
         norm_eval=False,
         extra=dict(

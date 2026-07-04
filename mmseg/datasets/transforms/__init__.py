@@ -14,6 +14,9 @@ from .transforms import (CLAHE, AdjustGamma, Albu, BioMedical3DPad,
                          RandomRotate, RandomRotFlip, Rerange, Resize,
                          ResizeShortestEdge, ResizeToMultiple, RGB2Gray,
                          SegRescale)
+from .formatting_custom import PackSegInputsPseudo4ch
+from .rgbd import LoadDepthImageFromFile, PackRGBDSegInputs, ResizeRGBD, ResizeToMultipleRGBD, GenerateNullDepthImage
+from .rgbd_augmentation import RandomSizedCropRGBD, CoarseDropoutDepth, RandomDepthOffset
 
 # yapf: enable
 __all__ = [
@@ -26,5 +29,7 @@ __all__ = [
     'BioMedical3DRandomFlip', 'BioMedicalRandomGamma', 'BioMedical3DPad',
     'RandomRotFlip', 'Albu', 'LoadSingleRSImageFromFile', 'ConcatCDInput',
     'LoadMultipleRSImageFromFile', 'LoadDepthAnnotation', 'RandomDepthMix',
-    'RandomFlip', 'Resize'
+    'RandomFlip', 'Resize', 'LoadDepthImageFromFile', 'PackRGBDSegInputs',
+    'ResizeRGBD', 'ResizeToMultipleRGBD', 'PackSegInputsPseudo4ch', 'GenerateNullDepthImage',
+    'RandomSizedCropRGBD', 'CoarseDropoutDepth', 'RandomDepthOffset'
 ]

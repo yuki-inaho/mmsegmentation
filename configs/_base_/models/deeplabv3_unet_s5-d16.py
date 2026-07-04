@@ -1,19 +1,24 @@
 # model settings
-norm_cfg = dict(type='SyncBN', requires_grad=True)
-data_preprocessor = dict(
-    type='SegDataPreProcessor',
-    mean=[123.675, 116.28, 103.53],
-    std=[58.395, 57.12, 57.375],
-    bgr_to_rgb=True,
-    pad_val=0,
-    seg_pad_val=255)
+norm_cfg = dict(type="SyncBN", requires_grad=True)
+# data_preprocessor = dict(
+#    type="SegDataPreProcessor",
+#    mean=[123.675, 116.28, 103.53],
+#    std=[58.395, 57.12, 57.375],
+#    # mean=[123.675, 116.28, 103.53, 0.0],  # @DEBUG
+#    # std=[58.395, 57.12, 57.375, 0.0],  # @DEBUG
+#    bgr_to_rgb=True,
+#    pad_val=0,
+#    seg_pad_val=255,
+#    size_divisor=32,
+# )
 model = dict(
-    type='EncoderDecoder',
-    data_preprocessor=data_preprocessor,
+    type="EncoderDecoder",
+    # data_preprocessor=data_preprocessor,
     pretrained=None,
     backbone=dict(
-        type='UNet',
-        in_channels=3,
+        type="UNet",
+        in_channels=3,  # @DEBUG
+        # in_channels=4,
         base_channels=64,
         num_stages=5,
         strides=(1, 1, 1, 1, 1),
@@ -25,11 +30,12 @@ model = dict(
         with_cp=False,
         conv_cfg=None,
         norm_cfg=norm_cfg,
-        act_cfg=dict(type='ReLU'),
-        upsample_cfg=dict(type='InterpConv'),
-        norm_eval=False),
+        act_cfg=dict(type="ReLU"),
+        upsample_cfg=dict(type="InterpConv"),
+        norm_eval=False,
+    ),
     decode_head=dict(
-        type='ASPPHead',
+        type="ASPPHead",
         in_channels=64,
         in_index=4,
         channels=16,
@@ -38,21 +44,32 @@ model = dict(
         num_classes=2,
         norm_cfg=norm_cfg,
         align_corners=False,
-        loss_decode=dict(
-            type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0)),
+        # https://github.com/open-mmlab/mmsegmentation/blob/master/docs/en/faq.md#how-to-handle-binary-segmentation-task
+        # out_channels=1,
+        # loss_decode=dict(type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0)),
+        out_channels=2,
+        loss_decode=dict(type="CrossEntropyLoss", use_sigmoid=False, loss_weight=1.0),
+    ),
     auxiliary_head=dict(
-        type='FCNHead',
+        type="FCNHead",
         in_channels=128,
         in_index=3,
         channels=64,
         num_convs=1,
         concat_input=False,
-        dropout_ratio=0.1,
+        # dropout_ratio=0.1,
+        dropout_ratio=0.01,
         num_classes=2,
         norm_cfg=norm_cfg,
         align_corners=False,
-        loss_decode=dict(
-            type='CrossEntropyLoss', use_sigmoid=False, loss_weight=0.4)),
+        # out_channels=1,
+        # loss_decode=dict(type='CrossEntropyLoss', use_sigmoid=False, loss_weight=0.4))e
+        out_channels=2,
+        loss_decode=dict(type="CrossEntropyLoss", use_sigmoid=False, loss_weight=0.4),
+    ),
     # model training and testing settings
     train_cfg=dict(),
-    test_cfg=dict(mode='slide', crop_size=256, stride=170))
+    test_cfg=dict(mode="whole")
+    # test_cfg=dict(mode='slide', crop_size=512, stride=100)
+    # test_cfg=dict()
+)
